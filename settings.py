@@ -1,4 +1,4 @@
 import discord
+from discord.ext import commands
+from discord import app_commands
 from dotenv import load_dotenv
-
-client = discord.Client(intents=discord.Intents.default())

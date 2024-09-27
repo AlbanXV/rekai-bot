@@ -1,1 +1,7 @@
 .env
+assets/
+cogs/media.py
+utility/users.py
+utility/words.py
+*.pyc
+__pycache__/
