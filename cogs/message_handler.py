@@ -48,4 +48,14 @@ class MessageHandler(commands.Cog):
             await self.bot.process_commands(message)
 
 async def setup(bot):
+    """
+        Add the cog(s) / command(s) function to the bot
+
+        args: 
+            - bot: commands.Bot
+
+        returns:
+            - None
+        
+    """
     await bot.add_cog(MessageHandler(bot))
