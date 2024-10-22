@@ -2,7 +2,13 @@
 A Discord Bot written in Python to manage servers.
 
 ## Installation
-TBA
+The requirements for this project is in the `requirements.txt`. Run the following for installing:
+```
+pip install -r requirements.txt
+```
 
 ## Usage
-TBA
+To run the bot, simply type:
+```
+py main.py
+```
