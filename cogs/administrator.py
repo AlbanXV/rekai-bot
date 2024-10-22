@@ -10,6 +10,22 @@ class Administrator(commands.Cog):
     @app_commands.command(name="assign_role", description="Assign user(s) a server role")
     @app_commands.checks.bot_has_permissions(administrator=True)
     async def assign_role(self, interaction: discord.Interaction, role_name: str, user: str = None):
+        """
+        Assign roles for the user(s).
+
+        If the user parameter is empty, the chosen role will be assigned to everyone.
+
+        args: 
+            - self
+            - interaction: discord.Interaction
+            - role_name: str
+            - user: str [Opt]
+
+        returns:
+            - None
+        
+        """
+        
         role = discord.utils.get(interaction.guild.roles, name=role_name)
 
         if role is None:
@@ -47,4 +63,14 @@ class Administrator(commands.Cog):
         
 
 async def setup(bot: commands.Bot):
+    """
+        Add the cog(s) / command(s) function to the bot
+
+        args: 
+            - bot: commands.Bot
+
+        returns:
+            - None
+        
+        """
     await bot.add_cog(Administrator(bot))

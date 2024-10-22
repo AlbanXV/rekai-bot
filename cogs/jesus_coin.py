@@ -11,8 +11,21 @@ class JesusCoin(commands.Cog):
     @app_commands.checks.cooldown(1,2)
     @app_commands.command(name="jesuscoin", description="Ask the coin a question to decide your fate.")
     async def jesus_coin(self, interaction: discord.Interaction, question: str):
+        """
+        A small fun command that resembles Coin Toss / Flip a Coin game.
 
+        Ask the bot a Yes/No question and get a randomised reply between 'Yes'
+        or 'No'.
 
+        args: 
+            - self
+            - interaction: discord.Interaction
+            - question: str
+
+        returns:
+            - None
+        
+        """
         
         choices = random.choice(["Yes", "No"])
 
@@ -31,4 +44,14 @@ class JesusCoin(commands.Cog):
 
 
 async def setup(bot: commands.Bot):
+    """
+        Add the cog(s) / command(s) function to the bot
+
+        args: 
+            - bot: commands.Bot
+
+        returns:
+            - None
+        
+    """
     await bot.add_cog(JesusCoin(bot))

@@ -13,17 +13,29 @@ class MessageHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        """
+        A function that is called when a message is created and sent.
+        No commands necessary.
 
-            if message.author == self.bot.user:
+        args: 
+            - self
+            - message: Any
+
+        returns:
+            - None
+        
+        """   
+
+        if message.author == self.bot.user:
+            return
+
+        for i in words:
+            if i in message.content.lower():
+                await message.channel.send(f"{message.author.mention} said {i} 🤣🤣")
                 return
-
-            for i in words:
-                if i in message.content.lower():
-                    await message.channel.send(f"{message.author.mention} said {i} 🤣🤣")
-                    return
             
             if message.author.id == xizzio:
-                await user_timers(message=message, user_id=xizzio, response=f"guys, <@{xizzio}> is talking. https://tenor.com/view/open-door-slide-door-shocked-surprised-gif-17800135", interval=RESPONSE_INTERVAL)
+                await user_timers(message=message, user_id=xizzio, response=f"guys, <@{xizzio}> is talking. https://tenor.com/view/open-door-slide-door-shocked-surprised-gif-17800135", interval=RESPONSE_INTERVAL, recent=self.last_time)
                 return
             
             if message.author.id == asif:

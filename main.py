@@ -24,6 +24,17 @@ class ClientBot(commands.Bot):
         self.last_time = {}
 
     async def on_ready(self):
+        """
+        When the bot is online and finished logging in, on_ready() is called
+        to set things up such as events for the bot.
+
+        args: 
+            - self
+
+        returns:
+            - None
+        
+        """
 
         await bot.tree.sync()
 
@@ -39,6 +50,18 @@ class ClientBot(commands.Bot):
         )
 
     async def setup_hook(self):
+        """
+        Setups cogs / bot commands from the folder /cogs by adding them
+        and loading them (extentions) in the bot system. 
+
+        args: 
+            - self
+
+        returns:
+            - None
+        
+        """
+
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py') and filename != '__init__.py':
                 await self.load_extension(f'cogs.{filename[:-3]}')
