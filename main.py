@@ -6,16 +6,15 @@ from settings import *
 
 from cogs import *
 
-
 load_dotenv()
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 SERVER = os.getenv('DISCORD_GUILD')
 GUILD_ID = os.getenv('GUILD_ID')
-RESPONSE_INTERVAL = 3600 # 1 time i sekunder
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 
 class ClientBot(commands.Bot):
     def __init__(self):
@@ -38,15 +37,6 @@ class ClientBot(commands.Bot):
             f'{self.user} has connected to Discord. \n'
             f'Connected to {i.name}(id: {i.id})'
         )
-
-    async def on_message(self, message):
-
-        if message.author == self.user:
-            return
-
-
-
-        await self.process_commands(message)
 
     async def setup_hook(self):
         for filename in os.listdir('./cogs'):
