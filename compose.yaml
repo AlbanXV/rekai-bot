@@ -1,0 +1,4 @@
+services:
+  rekai-bot:
+    container_name: rekai-bot
+    build: .

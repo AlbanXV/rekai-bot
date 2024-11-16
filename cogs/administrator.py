@@ -44,6 +44,8 @@ class Administrator(commands.Cog):
                         members_count += 1
                     except discord.Forbidden:
                         await interaction.followup.send("Could not assign role. Missing permission.", ephemeral=True)
+                    except Exception as e:
+                        await interaction.response.send_message(f"Unexpected error occured: {e}", ephemeral=True)
 
             await interaction.response.send_message(f"Assigned role: {role} to everyone")
 
@@ -93,7 +95,8 @@ class Administrator(commands.Cog):
                     await interaction.response.send_message(f"Unassigned role: {role} from user {user}")
                 except discord.Forbidden:
                     await interaction.followup.send("Could not assign role. Missing permission.", ephemeral=True)
-        
+                except Exception as e:
+                    await interaction.response.send_message(f"Unexpected error occured: {e}", ephemeral=True)
         else:
             await interaction.response.send_message(f"User {user} does not exist.", ephemeral=True)
             return
@@ -127,6 +130,74 @@ class Administrator(commands.Cog):
         delete = await interaction.channel.purge(limit=amount)
 
         await interaction.response.send_message(f"Successfully deleted {amount} messages.")
+
+
+
+    @app_commands.command(name="create_role", description="Create a server role")
+    @app_commands.checks.bot_has_permissions(administrator=True)
+    async def create_role(self, interaction: discord.Interaction, role_name: str):
+        """
+        Create role in a discord server
+
+        args: 
+            - self
+            - interaction: discord.Interaction
+            - role_name: str
+            - color: str [Opt]
+
+        returns:
+            - None
+        
+        """
+        
+        check_role = discord.utils.get(interaction.guild.roles, name=role_name)
+
+        if check_role is not None:
+            await interaction.response.send_message(f"Role {role_name} already exists.", ephemeral=True)
+            return
+        
+        role = interaction.guild
+
+        try:
+            add_role = await role.create_role(name=role_name)
+
+            print(f"Created role: {role_name}")
+            await interaction.response.send_message(f"Created role: {role_name}")
+        except discord.Forbidden:
+            await interaction.response.send_message("Could not assign role. Missing permission.", ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"Unexpected error occured: {e}", ephemeral=True)
+
+    @app_commands.command(name="delete_role", description="Delete a server role")
+    @app_commands.checks.bot_has_permissions(administrator=True)
+    async def delete_role(self, interaction: discord.Interaction, role_name: discord.Role):
+        """
+        Delete role in a discord server
+
+        args: 
+            - self
+            - interaction: discord.Interaction
+            - role_name: discord.Role
+
+        returns:
+            - None
+        
+        """
+        role = interaction.guild
+
+        if role is None:
+            await interaction.response.send_message(f"Role {role_name} does not exist.", ephemeral=True)
+            return
+        
+
+        try:
+            await role_name.delete(reason=f"Role {role_name} deleted by {interaction.user}")
+            print(f"Deleted role: {role_name}")
+            await interaction.response.send_message(f"Deleted role: {role_name}")
+        except discord.Forbidden:
+            await interaction.response.send_message("Could not assign role. Missing permission.", ephemeral=True)
+        except Exception as e:
+            await interaction.response.send_message(f"Unexpected error occured: {e}", ephemeral=True)
 
 async def setup(bot: commands.Bot):
     """

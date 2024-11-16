@@ -1,11 +1,16 @@
+import os
 import discord
 from discord.ext import commands
+from dotenv import load_dotenv
 
 from utility.words import words
 from utility.users import *
 from utility.user_timers import user_timers
 
 RESPONSE_INTERVAL = 3600 # 1 time i sekunder
+
+load_dotenv()
+LOG = int(os.getenv('LOG_CHANNEL')) # channel-id
 
 class MessageHandler(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -46,6 +51,53 @@ class MessageHandler(commands.Cog):
                 await message.channel.send("genshit*")
 
             await self.bot.process_commands(message)
+
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        if message.author.bot:
+            return
+        
+        log_channel = self.bot.get_channel(LOG)
+
+        if log_channel:
+
+            embed = discord.Embed(title="Message Deleted",
+                                description=f"Message by {message.author.mention} deleted",
+                                color=discord.Color.red())
+            embed.add_field(name="Message Content",
+                            value=message.content or "No content available",
+                            inline=False)
+            embed.set_footer(text=f"Author ID: {message.author.id} | Message ID: {message.id}")
+
+            await log_channel.send(embed=embed)
+        else:
+            print(f"Log channel not found. Deleted message: {message.content} from {message.author}")
+        
+
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+
+        log_channel = self.bot.get_channel(LOG)
+
+        if log_channel:
+
+            embed = discord.Embed(title="Message Edited",
+                                description=f"Message by {before.author.mention} deleted",
+                                color=discord.Color.orange())
+            embed.add_field(name="Message Content [Before]",
+                            value=before.content or "No content available",
+                            inline=False)
+            embed.add_field(name="Message Content [After]",
+                            value=after.content or "No content available",
+                            inline=False)
+            embed.set_footer(text=f"Author ID: {before.author.id} | Message ID: {before.id}")
+
+            await log_channel.send(embed=embed)
+        else:
+            print(f"Log channel not found. Edited message: {before.content} -> {after.content} from {before.author}")
+        
+
 
 async def setup(bot):
     """
